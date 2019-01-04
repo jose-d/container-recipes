@@ -1,0 +1,5 @@
+# build:
+
+sudo /home/soft/singularity/2.6.1/bin/singularity build ./container_debian.img ./container_debian.def
+
+
