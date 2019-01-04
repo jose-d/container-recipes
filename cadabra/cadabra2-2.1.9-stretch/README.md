@@ -1,10 +1,10 @@
-#build
+# build
 
-sudo /home/soft/singularity/2.6.1/bin/singularity build ./container.img ./Singularity
+`sudo /home/soft/singularity/2.6.1/bin/singularity build ./container.img ./Singularity`
 
-#run
+# run
 
-singularity run ./image.img
+`singularity run ./container.img`
 
-#notes
+# notes
 tested with Singularity 2.6.1
