@@ -2,6 +2,9 @@ BootStrap: library
 From: jose_d/default/centos7_hpc_foss-2019a
 
 %post
+    export easybuild_version="3.9.4"
+    export easyconfigs_root="/opt/eb/software/EasyBuild/${easybuild_version}/lib/python2.7/site-packages/easybuild_easyconfigs-${easybuild_version}-py2.7.egg/easybuild/easyconfigs"
+    
     # update Easybuild to latest version available
     su eb -c "export EASYBUILD_BUILDPATH=/dev/shm \
       && export EASYBUILD_MODULES_TOOL=Lmod \
@@ -17,7 +20,7 @@ From: jose_d/default/centos7_hpc_foss-2019a
       && source /etc/profile.d/lmod.sh \
       && module purge \
       && module load EasyBuild \
-      && eb /opt/eb/software/EasyBuild/3.9.3/lib/python2.7/site-packages/easybuild_easyconfigs-3.9.3-py2.7.egg/easybuild/easyconfigs/g/GSL/GSL-2.5-GCC-8.2.0-2.31.1.eb -r"
+      && eb ${easyconfigs_root}/g/GSL/GSL-2.5-GCC-8.2.0-2.31.1.eb -r"
 
 %environment
     export EASYBUILD_MODULES_TOOL=Lmod
