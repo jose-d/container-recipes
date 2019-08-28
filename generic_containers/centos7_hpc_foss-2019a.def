@@ -20,7 +20,7 @@ From: jose_d/default/centos7_hpc_base:latest
       && source /etc/profile.d/lmod.sh \
       && module purge \
       && module load EasyBuild \
-      && eb ${easybuild_root}/f/foss/foss-2019a.eb -r"
+      && eb ${easyconfigs_root}/f/foss/foss-2019a.eb -r"
 
 %environment
     export EASYBUILD_MODULES_TOOL=Lmod
