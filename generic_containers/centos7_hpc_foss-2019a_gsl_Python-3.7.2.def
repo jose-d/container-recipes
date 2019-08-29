@@ -1,0 +1,55 @@
+BootStrap: library
+From: jose_d/default/centos7_hpc_foss-2019a_gsl
+
+%post
+
+    export easybuild_version="3.9.4"
+    export easyconfigs_root="/opt/eb/software/EasyBuild/${easybuild_version}/lib/python2.7/site-packages/easybuild_easyconfigs-${easybuild_version}-py2.7.egg/easybuild/easyconfigs"
+
+    chown -R eb:eb /opt/eb
+
+    # update Easybuild to latest version available
+    su eb -c "export EASYBUILD_BUILDPATH=/dev/shm \
+      && export EASYBUILD_MODULES_TOOL=Lmod \
+      && export EASYBUILD_PREFIX=/opt/eb \
+      && source /etc/profile.d/lmod.sh \
+      && module use /opt/eb/modules/all \
+      && module load EasyBuild \
+      && eb --install-latest-eb-release"
+
+    # install Python-3.7.2
+    su eb -c "export EASYBUILD_BUILDPATH=/dev/shm \
+      && export EASYBUILD_MODULES_TOOL=Lmod \
+      && export EASYBUILD_PREFIX=/opt/eb \
+      && source /etc/profile.d/lmod.sh \
+      && module use /opt/eb/modules/all \
+      && module purge \
+      && module load EasyBuild \
+      && eb ${easyconfigs_root}/p/Python/Python-3.7.2-GCCcore-8.2.0.eb -r"
+
+   # install "scipy-bundle"
+   su eb -c "export EASYBUILD_BUILDPATH=/dev/shm \
+      && export EASYBUILD_MODULES_TOOL=Lmod \
+      && export EASYBUILD_PREFIX=/opt/eb \
+      && source /etc/profile.d/lmod.sh \
+      && module use /opt/eb/modules/all \
+      && module purge \
+      && module load EasyBuild \
+      && eb ${easyconfigs_root}/s/SciPy-bundle/SciPy-bundle-2019.03-foss-2019a.eb -r"
+
+%environment
+    export EASYBUILD_MODULES_TOOL=Lmod
+    export EASYBUILD_PREFIX=/opt/eb
+    export EASYBUILD_BUILDPATH=/dev/shm
+
+    # folowing mechanism was decribed in EasyBuild documentation - module is loaded by-default
+    #  source: https://easybuild.readthedocs.io/en/latest/Containers.html
+    source /etc/profile
+    export LMOD_SHORT_TIME=86400
+    module --force purge
+    module unuse $MODULEPATH
+    module use /opt/eb/modules/all
+    module load foss
+    module load GSL
+    module load Python
+    module load SciPy-bundle
