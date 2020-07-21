@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: centos:8
+
+%help
+  Container with Centos8, distribution-default Python3 (python3.6) ATM and some well-known packages.
+  The aim is to provide consistent environment for jupyter notebook spawned by batchspawner from jupyterhub.
+
+%post
+
+  # this is to avoid message "setlocale: LC_ALL: cannot change locale (en_US.utf-8)" after clean install of CentOS8
+  dnf install --assumeyes langpacks-en glibc-all-langpacks wget vim curl python3 git
+
+  python3 -m pip install --upgrade pip
+  python3 -m pip install --upgrade jupyterhub
+  python3 -m pip install --upgrade notebook
+  python3 -m pip install --upgrade pandas numpy pytest ipython ipywidgets ipython matplotlib
+  
+
+  # there is major difference between batchspawner available in pip and the version at github.. So we clone the version from gh:
+  #
+  #python3 -m pip install --upgrade batchspawner
+  git clone https://github.com/jupyterhub/batchspawner.git
+  cd batchspawner
+  pip install -e .
+
+%environment
+
+  # this is to have binaries from pip available in PATH
+  export PATH="~/.local/bin":$PATH
