@@ -1,0 +1,16 @@
+[Unit]
+Description=starts jupyterhub as systemd service
+After=network.target
+
+[Service]
+Type=simple
+
+ExecStart=/usr/local/bin/jupyterhub --ip 172.16.120.197 --port 8080 -f /root/jupyterhub_config.py
+StandardOutput=journal
+TimeoutStartSec=60
+Restart=always
+RestartSec=60
+SyslogIdentifier=jupyterhub
+
+[Install]
+WantedBy=multi-user.target
