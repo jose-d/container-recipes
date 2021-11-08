@@ -7,23 +7,44 @@ From: centos:8
 
 %post
 
+  # try to update everything:
+  yum -y update
+
+  # install openhpc release:
+  yum -y install http://repos.openhpc.community/OpenHPC/2/CentOS_8/x86_64/ohpc-release-2-1.el8.x86_64.rpm
+  yum -y install epel-release
+  yum -y install dnf-plugins-core
+  yum -y config-manager --set-enabled PowerTools
+  yum -y install ohpc-slurm-client
+  yum -y install stress htop python3-Cython
+
+  dnf --assumeyes module enable nodejs:12
+  dnf --assumeyes install nodejs
+
   # this is to avoid message "setlocale: LC_ALL: cannot change locale (en_US.utf-8)" after clean install of CentOS8
   dnf install --assumeyes langpacks-en glibc-all-langpacks wget vim curl python3 git
 
-  python3 -m pip install --upgrade pip
   python3 -m pip install --upgrade jupyterhub
+  python3 -m pip install --upgrade jupyterlab
+  python3 -m pip install --upgrade jupyterlab_slurm
   python3 -m pip install --upgrade notebook
-  python3 -m pip install --upgrade pandas numpy pytest ipython ipywidgets ipython matplotlib
-  
 
-  # there is major difference between batchspawner available in pip and the version at github.. So we clone the version from gh:
-  #
+  python3 -m pip install ipywidgets plotly kaleido ipympl
+  python3 -m pip install --upgrade pandas numpy pytest ipython ipywidgets ipython matplotlib astropy lmfit
+
   #python3 -m pip install --upgrade batchspawner
   git clone https://github.com/jupyterhub/batchspawner.git
   cd batchspawner
-  pip install -e .
+  pip3 install -e .
+
+  python3 -m pip install wheel # wheel needed by black package bellow
+  python3 -m pip install jupyterlab_code_formatter black
+
+  jupyter labextension install jupyterlab-slurm
+  jupyter labextension install jupyterlab-plotly
+  jupyter labextension install @jupyter-widgets/jupyterlab-manager
+  jupyter labextension install jupyter-matplotlib
 
 %environment
 
-  # this is to have binaries from pip available in PATH
   export PATH="~/.local/bin":$PATH
